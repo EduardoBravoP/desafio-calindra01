@@ -13,7 +13,7 @@
 
 ## Como ver a aplicação:
 
-- Acesse pelo link: (link)
+- Acesse pelo link: https://desafio-calindra01.vercel.app/
 
 - Ou siga o passo-a-passo para rodar em sua máquina:
 
