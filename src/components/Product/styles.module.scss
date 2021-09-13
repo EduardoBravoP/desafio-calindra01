@@ -1,0 +1,35 @@
+.container {
+  height: 200px;
+  max-width: 242px;
+  background-color: var(--gray-200);
+  border-radius: 20px;
+  padding: 17px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  h3 {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 400;
+    font-size: 1.125rem;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .eye {
+    margin-left: 5px;
+  }
+}
