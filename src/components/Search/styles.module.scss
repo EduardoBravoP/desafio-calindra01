@@ -1,4 +1,17 @@
 .container {
+  width: 100%;
+  padding: 0 20px 0 20px;
+  max-width: 505px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-19px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.input {
   height: 39px;
   width: 100%;
   max-width: 505px;
@@ -39,6 +52,28 @@
 
     &:hover {
       background-color: var(--purple-500);
+    }
+  }
+}
+
+.autoComplete {
+  margin-top: 11px;
+  background-color: var(--white);
+  border: 1px solid var(--gray-400);
+  border-radius: 20px;
+  padding: 15px 0 15px 0;
+
+  div {
+    height: 36px;
+    padding: 0 14px 0 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    &:hover {
+      background-color: var(--gray-200);
+      cursor: pointer;
     }
   }
 }
