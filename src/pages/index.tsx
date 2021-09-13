@@ -13,7 +13,12 @@ const Home: NextPage = () => {
 
       <main>
         <h1>Produtos</h1>
-        <div>
+        <div className={styles.list}>
+          <Product />
+          <Product />
+          <Product />
+          <Product />
+          <Product />
           <Product />
         </div>
       </main>
