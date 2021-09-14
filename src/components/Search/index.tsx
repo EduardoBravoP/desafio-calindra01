@@ -1,4 +1,11 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FiSearch } from "react-icons/fi";
 import { api } from "../../services/api";
 
@@ -27,17 +34,39 @@ interface SearchProps {
 }
 
 export default function Search({ setProducts }: SearchProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [searchValue, setSearchValue] = useState("");
   const [data, setData] = useState<Data>();
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isSuggestionShown, setIsSuggestionShown] = useState(false);
 
-  function handleSearch(e: FormEvent) {
-    e.preventDefault();
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
 
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  function handleClickOutside(e: MouseEvent) {
+    const { current: container } = containerRef;
+
+    if (container && !container.contains(e.target as Node)) {
+      setIsSuggestionShown(false);
+    }
+  }
+
+  function handleSearch(e?: FormEvent) {
+    e?.preventDefault();
+
+    setIsSuggestionShown(false);
     setProducts(data?.products);
   }
 
   async function handleSearchValueChange(value: string) {
+    setSearchValue(value);
+
     if (!value.trim()) {
       setIsSuggestionShown(false);
       setSuggestions([]);
@@ -55,14 +84,27 @@ export default function Search({ setProducts }: SearchProps) {
     setData(response.data);
   }
 
+  async function handleSearchWithSuggestion(suggestion: string) {
+    setSearchValue(suggestion);
+    setIsSuggestionShown(false);
+
+    const response = await api.get<Data>(
+      `/autocomplete?content=${suggestion}&source=nanook`
+    );
+
+    setSuggestions(response.data.suggestions);
+    setData(response.data);
+    setProducts(response.data.products);
+  }
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={containerRef}>
       <form className={styles.input} onSubmit={handleSearch}>
         <input
           placeholder="Buscar produtos..."
           type="text"
+          value={searchValue}
           onChange={(e) => handleSearchValueChange(e.target.value)}
-          onBlur={() => setIsSuggestionShown(false)}
           onFocus={() => setIsSuggestionShown(true)}
         />
         <button type="submit">
@@ -73,7 +115,10 @@ export default function Search({ setProducts }: SearchProps) {
       {isSuggestionShown && suggestions[0] && (
         <div className={styles.autoComplete}>
           {suggestions.map((suggestion) => (
-            <div key={suggestion.term}>
+            <div
+              key={suggestion.term}
+              onClick={() => handleSearchWithSuggestion(suggestion.term)}
+            >
               <FiSearch size={20} color="#560BAD" />
               <p>{suggestion.term}</p>
             </div>
